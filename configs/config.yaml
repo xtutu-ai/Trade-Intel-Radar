@@ -1,0 +1,89 @@
+app:
+  name: market-intel-daily
+  timezone: Asia/Shanghai
+  db_path: data/market_intel.sqlite3
+  output_dir: data/output
+  raw_dir: data/raw
+  log_dir: logs
+
+runtime:
+  max_total_items: 250
+  http_timeout_seconds: 20
+  request_sleep_seconds: 0.2
+
+x_api:
+  enabled: true
+  max_posts_per_account: 8
+  max_keyword_queries_per_run: 10
+  max_results_per_query: 10
+
+rss:
+  enabled: true
+  max_entries_per_feed: 12
+  feeds:
+    - name: Reuters Markets
+      url: https://feeds.reuters.com/reuters/marketsNews
+    - name: CNBC Top News
+      url: https://www.cnbc.com/id/100003114/device/rss/rss.html
+    - name: CNBC Technology
+      url: https://www.cnbc.com/id/19854910/device/rss/rss.html
+    - name: MarketWatch Top Stories
+      url: https://feeds.marketwatch.com/marketwatch/topstories/
+    - name: SEC Press Releases
+      url: https://www.sec.gov/news/pressreleases.rss
+
+official_pages:
+  enabled: true
+  urls:
+    - name: White House News
+      url: https://www.whitehouse.gov/news/
+    - name: USTR Press Releases
+      url: https://ustr.gov/about-us/policy-offices/press-office/press-releases
+    - name: BIS News
+      url: https://www.bis.gov/newsroom/
+
+reports_folder:
+  enabled: true
+  path: data/reports
+  max_chars_per_file: 8000
+
+scoring:
+  min_score_to_include: 10
+  source_weights:
+    whitehouse.gov: 10
+    ustr.gov: 9
+    bis.gov: 9
+    sec.gov: 8
+    x.com: 8
+    twitter.com: 8
+    reuters: 8
+    cnbc: 7
+    marketwatch: 6
+    local_report: 10
+  keyword_weights:
+    tariff: 10
+    china: 8
+    chips: 9
+    semiconductor: 9
+    export control: 10
+    ai: 7
+    gpu: 8
+    cpu: 10
+    hbm: 9
+    ddr5: 8
+    memory: 8
+    networking: 8
+    ethernet: 7
+    optical: 7
+    copper: 7
+    pcb: 8
+    liquid cooling: 7
+    power: 6
+    robotaxi: 8
+    optimus: 8
+    xai: 8
+    grok: 6
+    data center: 8
+
+mail:
+  subject_prefix: 每日交易情报
