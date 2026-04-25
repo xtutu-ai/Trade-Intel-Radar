@@ -1,0 +1,12 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+logs/*.log
+data/raw/*.jsonl
+data/processed/*.jsonl
+data/output/*.html
+data/output/*.json
+data/market_intel.sqlite3
+.DS_Store
