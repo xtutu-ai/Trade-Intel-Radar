@@ -16,8 +16,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 h1 { font-size: 24px; margin-bottom: 6px; }
 h2 { border-left: 4px solid #2563eb; padding-left: 10px; margin-top: 28px; font-size: 18px; }
 .card { border:1px solid #e5e7eb; border-radius: 10px; padding: 14px; margin: 12px 0; background:#fff; }
+.translation { border-left: 3px solid #16a34a; background:#f0fdf4; }
+.original { color:#6b7280; font-size: 13px; margin-top: 6px; }
 .muted { color:#6b7280; font-size: 13px; }
 .badge { display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; color:#3730a3; font-size:12px; margin-right:6px; }
+.badge-green { background:#dcfce7; color:#166534; }
 .risk { color:#b45309; }
 .footer { margin-top: 30px; color:#6b7280; font-size:12px; }
 a { color:#2563eb; text-decoration:none; }
@@ -38,6 +41,17 @@ a { color:#2563eb; text-decoration:none; }
   <p class="risk"><strong>兑现风险：</strong>{{ x.get('already_priced_in_risk','') }}</p>
   <div class="muted">相关：{{ ', '.join(x.get('related_assets', [])) }}</div>
 </div>
+{% endfor %}
+<h2>重点英文信息中文翻译/摘要</h2>
+{% for x in analysis.get('translated_items', []) %}
+<div class="card translation">
+  <div><span class="badge badge-green">中文翻译</span><span class="badge">{{ x.get('source','') }}</span><strong>{{ x.get('chinese_title','') }}</strong></div>
+  <div class="original">原文：{{ x.get('original_title','') }}</div>
+  <p>{{ x.get('chinese_summary','') }}</p>
+  <p><strong>交易相关性：</strong>{{ x.get('trading_relevance','') }}</p>
+</div>
+{% else %}
+<div class="card muted">LLM 未返回 translated_items；如果已经配置 OpenRouter，请检查模型是否支持 JSON 输出。</div>
 {% endfor %}
 <h2>主线变化预警</h2>
 <ul>{% for x in analysis.get('theme_shift_alerts', []) %}<li>{{ x }}</li>{% else %}<li>暂无明显主线迁移信号，需继续积累历史样本。</li>{% endfor %}</ul>
@@ -73,7 +87,8 @@ a { color:#2563eb; text-decoration:none; }
 
 def fallback_analysis(items: list[IntelItem], theme_shift: dict, stock_map: dict) -> dict:
     top = []
-    for it in items[:8]:
+    translated = []
+    for idx, it in enumerate(items[:8], start=1):
         top.append({
             "title": it.title,
             "source": it.source,
@@ -82,9 +97,18 @@ def fallback_analysis(items: list[IntelItem], theme_shift: dict, stock_map: dict
             "already_priced_in_risk": "未知，需观察相关板块是否已提前上涨。",
             "related_assets": [],
         })
+        translated.append({
+            "id": idx,
+            "source": it.source,
+            "original_title": it.title,
+            "chinese_title": it.title,
+            "chinese_summary": "LLM 未启用或调用失败，暂时只能显示原始标题。配置 OpenRouter 后会自动生成中文翻译和中文摘要。",
+            "trading_relevance": f"规则评分 {it.score}，命中关键词：{', '.join(it.matched_keywords[:8])}",
+        })
     return {
         "one_sentence_conclusion": "LLM 未启用或调用失败，当前邮件基于规则评分生成。",
         "top_intel": top,
+        "translated_items": translated,
         "theme_shift_alerts": [str(x) for x in theme_shift.get("alerts", [])],
         "trump_policy_watch": [],
         "musk_ai_tesla_watch": [],
