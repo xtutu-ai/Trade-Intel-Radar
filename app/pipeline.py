@@ -54,7 +54,10 @@ def collect_all(settings: Settings) -> list[IntelItem]:
                 keyword_queries=_flatten_watchlist_queries(settings.watchlist),
                 max_keyword_queries=int(xcfg.get("max_keyword_queries_per_run", 10)),
                 max_results_per_query=int(xcfg.get("max_results_per_query", 10)),
+                max_posts_per_account=int(xcfg.get("max_posts_per_account", 8)),
+                max_accounts=int(xcfg.get("max_accounts", 20)),
                 timeout=timeout,
+                sleep_seconds=float(runtime.get("request_sleep_seconds", 0.2)),
             )
         )
     if cfg.get("rss", {}).get("enabled", True):
