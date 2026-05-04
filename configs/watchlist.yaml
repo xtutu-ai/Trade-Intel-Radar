@@ -1,103 +1,19 @@
 people:
   trump:
     accounts:
-      - realDonaldTrump
-      - WhiteHouse
-      - POTUS
-      - USTR
-      - CommerceGov
-    keywords:
-      - Trump tariff China chips
-      - Trump export control semiconductor
-      - Trump rare earth China
-      - Trump dollar Fed oil
+      - TruthTrumpPost
+    keywords: []
   musk:
     accounts:
       - elonmusk
-      - Tesla
-      - Tesla_AI
-      - xai
-      - SpaceX
-      - Starlink
-    keywords:
-      - Musk xAI data center GPU
-      - Musk Tesla robotaxi Optimus
-      - Musk Grok inference
-      - Tesla FSD robotaxi Optimus
+    keywords: []
 
 institutions:
-  accounts:
-    - MorganStanley
-    - GoldmanSachs
-    - Citi
-    - jpmorgan
-    - UBS
-    - BankofAmerica
-  keywords:
-    - Morgan Stanley AI CPU GPU
-    - Morgan Stanley AI infrastructure CPU memory networking
-    - Goldman AI capex CPU GPU memory
-    - Bank of America AI semiconductors CPU GPU
-    - Citi AI infrastructure networking memory
-    - UBS AI semiconductor server supply chain
-    - JPMorgan AI capex data center power
+  accounts: []
+  keywords: []
 
 themes:
-  ai_infra:
-    keywords:
-      - GPU
-      - CPU
-      - HBM
-      - DDR5
-      - memory
-      - networking
-      - Ethernet
-      - optical
-      - copper
-      - PCB
-      - liquid cooling
-      - power
-      - data center
-    cn_stocks:
-      - 澜起科技
-      - 沪电股份
-      - 东山精密
-      - 生益科技
-      - 工业富联
-      - 中际旭创
-      - 新易盛
-      - 天孚通信
-      - 江波龙
-      - 佰维存储
-      - 北方华创
-    us_stocks:
-      - NVDA
-      - AMD
-      - AVGO
-      - MRVL
-      - MU
-      - TSM
-      - INTC
-      - TSLA
-  policy:
-    keywords:
-      - tariff
-      - export control
-      - sanction
-      - China
-      - rare earth
-      - chip ban
-      - manufacturing
-      - dollar
-      - Fed
-      - oil
-    cn_stocks:
-      - 北方华创
-      - 中微公司
-      - 中芯国际
-      - 中国石油
-    us_stocks:
-      - XLE
-      - DXY
-      - TSM
-      - NVDA
+  musk_trump:
+    keywords: []
+    cn_stocks: []
+    us_stocks: []
