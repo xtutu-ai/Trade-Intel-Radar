@@ -14,11 +14,10 @@ log = logging.getLogger(__name__)
 class XCollector(Collector):
     """Small-budget X API collector.
 
-    Strategy:
-    1. Pull fixed-account timelines for watch accounts, such as Elon Musk, WhiteHouse, Tesla, xAI.
-    2. Run a small number of recent-search keyword queries.
-
-    Both calls use official X API v2 and are skipped when X_BEARER_TOKEN is empty.
+    Pull fixed-account timelines for watch accounts. By default, this includes
+    original posts and replies, because many public figures communicate through
+    replies. Retweets are not requested unless X returns them as normal timeline
+    items for the account.
     """
 
     name = "x"
@@ -34,6 +33,7 @@ class XCollector(Collector):
         max_accounts: int = 20,
         timeout: int = 20,
         sleep_seconds: float = 0.2,
+        include_replies: bool = True,
     ):
         self.bearer_token = bearer_token.strip()
         self.account_names = list(dict.fromkeys([x.strip().lstrip("@") for x in account_names if x.strip()]))
@@ -44,6 +44,7 @@ class XCollector(Collector):
         self.max_accounts = max_accounts
         self.timeout = timeout
         self.sleep_seconds = sleep_seconds
+        self.include_replies = include_replies
 
     def collect(self) -> list[IntelItem]:
         if not self.bearer_token:
@@ -81,9 +82,10 @@ class XCollector(Collector):
         url = f"https://api.x.com/2/users/{user_id}/tweets"
         params = {
             "max_results": max(5, min(100, self.max_posts_per_account)),
-            "tweet.fields": "created_at,author_id,public_metrics,lang,referenced_tweets",
-            "exclude": "retweets,replies",
+            "tweet.fields": "created_at,author_id,public_metrics,lang,referenced_tweets,conversation_id",
         }
+        if not self.include_replies:
+            params["exclude"] = "retweets,replies"
         try:
             resp = requests.get(url, params=params, headers=self._headers(), timeout=self.timeout)
             if resp.status_code >= 400:
@@ -102,7 +104,7 @@ class XCollector(Collector):
                         content=text,
                         published_at=tweet.get("created_at", ""),
                         author=username,
-                        raw={"mode": "user_timeline", "metrics": tweet.get("public_metrics", {})},
+                        raw={"mode": "user_timeline", "metrics": tweet.get("public_metrics", {}), "referenced_tweets": tweet.get("referenced_tweets", [])},
                     )
                 )
             return out
